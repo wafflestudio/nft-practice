@@ -1,5 +1,28 @@
 {
   "dependencies": {
-    "ganache-cli": "^6.12.2"
-  }
+    "ganache-cli": "^6.12.2",
+    "openzeppelin-solidity": "^4.4.2"
+  },
+  "name": "NFT",
+  "description": "와플스튜디오 NFT 프로젝트",
+  "version": "1.0.0",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wafflestudio/NFT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wafflestudio/NFT/issues"
+  },
+  "homepage": "https://github.com/wafflestudio/NFT#readme",
+  "devDependencies": {}
 }
