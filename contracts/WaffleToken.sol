@@ -13,54 +13,21 @@ contract WaffleToken is Waffle, WaffleOwnership {
         setBaseURI("");
 
         for (uint8 i = 0; i < 10; i++) {
-            mintRandomWaffle();
+            string memory title = string("waffle NFT #" + i);
+            _mintNewWaffle(title);
         }
     }
 
     // @dev 새로운 Waffle 토큰 발행
-    function _mintWaffle(uint8[] memory loc, uint8 color, string memory title) internal {
-
-        uint256 tokenId = id(loc); 
-        
-        idToWaffle[tokenId] = Waffle(color, size, title);
-        _safeMint(msg.sender, tokenId); // 발행!
-    }
-
-    // @dev TODO 랜덤한 Waffle 토큰 발행 로직 설계
-    function mintRandomWaffle(uint8[] memory loc) public {
-
-        uint8 color = _getRandom();
-        string title = "TBD";
-
-        for (uint i=0; i<4; i++){
-            loc[i] = _getRandom();
-        }
-	    // x축끼리, y축끼리 중복되는 경우 처리
-        while(loc[0]==loc[1]) loc[1] = _getRandom();
-        while(loc[2]==loc[3]) loc[3] = _getRandom();
-        
-        _mintWaffle(loc, color, title);
+    function _mintNewWaffle(string memory title) internal {
+        uint tokenId = waffles.push(_createRandomWaffle(title)) - 1;
+        _safeMint(msg.sender, tokenId);
     }
 
     // @notice bake a new waffle with your ETH
-    // @dev TODO 새로운 와플 발행, 발행 세부 로직 설계
-    function claim(uint8 color, uint8 size, string calldata title) external payable {
+    function claim(string calldata title) external payable {
         require(msg.value == 0.00001 ether, "you need 0.00001 ETH to purchase waffle");
-        _mintWaffle(color, size, title);
-        payable(owner()).transfer(0.0001 ether);
+        _mintNewWaffle(title);
+        payable(owner()).transfer(0.00001 ether);
     }
-
-	// id = 좌표들과 color로 총 5자리 구성
-    function id(uint8[] memory loc, uint8 color) internal returns (uint256){
-        uint256 res = loc[0] + loc[1]*10 + loc[3]*100 + loc[4]*1000 + color*10000;
-        return res;
-    }
-
-	// 랜덤함수
-    function _getRandom() internal returns(uint8){
-        uint randNonce = 0;
-        uint8 random = uint8(uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randNonce))) % 6)+1; // randrange(1~6)
-        return random;
-    }
-
 }
