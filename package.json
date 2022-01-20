@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "ganache-cli": "^6.12.2",
+    "@openzeppelin/contracts": "^4.4.2",
+    "ganache-cli": "^6.1.8",
     "openzeppelin-solidity": "^4.4.2"
   },
   "name": "NFT",
@@ -23,6 +24,5 @@
   "bugs": {
     "url": "https://github.com/wafflestudio/NFT/issues"
   },
-  "homepage": "https://github.com/wafflestudio/NFT#readme",
-  "devDependencies": {}
+  "homepage": "https://github.com/wafflestudio/NFT#readme"
 }

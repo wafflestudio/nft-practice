@@ -1,36 +1,39 @@
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./Waffle.sol";
+import "./WaffleOwnership.sol";
 
-contract WaffleToken is Ownable, ERC721{
+// @dev 와플 토큰 민팅을 위한 최종 구현체
+contract WaffleToken is Waffle, WaffleOwnership {
 
-    struct Metadata { //우리가 설정할 특성들
-        uint8 color;
-        uint8 size;
-        string title;
+    // @notice WaffleTokens are first minted for students in waffleStudio (https://wafflestudio.com/)
+    // @dev TODO 초기화 시에 10명의 동아리원을 위한 토큰을 발행해야 합니다.
+    constructor() ERC721("WaffleToken", "WFTK") {
+        // TODO D_APP 개발 후 URI 연동
+        setBaseURI("");
+
+        for (uint8 i = 0; i < 10; i++) {
+            mintRandomWaffle();
+        }
     }
 
-    // 흔히 생각하는 NFT에 이미지 걸거나 아이템 거는건 이 부분에서 따로 db나 서버로 연결해주는거라고 합니다.
-    mapping(uint256 => Metadata) id_to_WaffleToken; // 와플토큰의 id를 딕셔너리 식의 자료구조로 만들어주고
-
-    constructor() ERC721("WaffleToken", "WFTK") { // 생성자
-
-        mint(1, 1, "First Token");
-        mint(2, 1, "First Token");
-        // 여기에 처음 필요한 만큼 발행하면 될 것 같습니다.
-    }
-
-    function mint(uint8 color, uint8 size, string memory title) internal{
+    // @dev 새로운 Waffle 토큰 발행
+    function _mintWaffle(uint8 color, uint8 size, string memory title) internal {
         uint256 tokenId = id(color, size); // 발행할때 아이디 정해지는 방식
-        id_to_WaffleToken[tokenId] = Metadata(color, size, title);
+        idToWaffle[tokenId] = Waffle(color, size, title);
         _safeMint(msg.sender, tokenId); // 발행!
     }
 
+    // @dev TODO 랜덤한 Waffle 토큰 발행 로직 설계
+    function mintRandomWaffle() public {
+
+    }
+
+    // @notice bake a new waffle with your ETH
+    // @dev TODO 새로운 와플 발행, 발행 세부 로직 설계
     function claim(uint8 color, uint8 size, string calldata title) external payable {
-        require(msg.value == 0.00001 ether, "claiming a date costs 10 finney");
-        // Condition for
-        mint(color, size, title);
+        require(msg.value == 0.00001 ether, "you need 0.00001 ETH to purchase waffle");
+        _mintWaffle(color, size, title);
         payable(owner()).transfer(0.0001 ether);
     }
 
