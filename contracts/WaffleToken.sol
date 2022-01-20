@@ -20,7 +20,7 @@ contract WaffleToken is Waffle, WaffleOwnership {
     // @dev 새로운 Waffle 토큰 발행
     function _mintWaffle(uint8[] memory loc, uint8 color, string memory title) internal {
 
-        uint256 tokenId = id(loc); // 발행할때 아이디 정해지는 방식
+        uint256 tokenId = id(loc); 
         
         idToWaffle[tokenId] = Waffle(color, size, title);
         _safeMint(msg.sender, tokenId); // 발행!
@@ -35,7 +35,7 @@ contract WaffleToken is Waffle, WaffleOwnership {
         for (uint i=0; i<4; i++){
             loc[i] = _getRandom();
         }
-
+	    // x축끼리, y축끼리 중복되는 경우 처리
         while(loc[0]==loc[1]) loc[1] = _getRandom();
         while(loc[2]==loc[3]) loc[3] = _getRandom();
         
@@ -50,16 +50,16 @@ contract WaffleToken is Waffle, WaffleOwnership {
         payable(owner()).transfer(0.0001 ether);
     }
 
-
+	// id = 좌표들과 color로 총 5자리 구성
     function id(uint8[] memory loc, uint8 color) internal returns (uint256){
-        // 아이디 정해지는 로직
         uint256 res = loc[0] + loc[1]*10 + loc[3]*100 + loc[4]*1000 + color*10000;
         return res;
     }
 
-    function _getRandom() returns(uint8){
+	// 랜덤함수
+    function _getRandom() internal returns(uint8){
         uint randNonce = 0;
-        uint8 random = uint8(uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randNonce))) % 6)+1;
+        uint8 random = uint8(uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randNonce))) % 6)+1; // randrange(1~6)
         return random;
     }
 
