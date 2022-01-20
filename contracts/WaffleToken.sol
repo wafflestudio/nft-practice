@@ -18,15 +18,28 @@ contract WaffleToken is Waffle, WaffleOwnership {
     }
 
     // @dev 새로운 Waffle 토큰 발행
-    function _mintWaffle(uint8 color, uint8 size, string memory title) internal {
-        uint256 tokenId = id(color, size); // 발행할때 아이디 정해지는 방식
+    function _mintWaffle(uint8[] memory loc, uint8 color, string memory title) internal {
+
+        uint256 tokenId = id(loc); // 발행할때 아이디 정해지는 방식
+        
         idToWaffle[tokenId] = Waffle(color, size, title);
         _safeMint(msg.sender, tokenId); // 발행!
     }
 
     // @dev TODO 랜덤한 Waffle 토큰 발행 로직 설계
-    function mintRandomWaffle() public {
+    function mintRandomWaffle(uint8[] memory loc) public {
 
+        uint8 color = _getRandom();
+        string title = "TBD";
+
+        for (uint i=0; i<4; i++){
+            loc[i] = _getRandom();
+        }
+
+        while(loc[0]==loc[1]) loc[1] = _getRandom();
+        while(loc[2]==loc[3]) loc[3] = _getRandom();
+        
+        _mintWaffle(loc, color, title);
     }
 
     // @notice bake a new waffle with your ETH
@@ -37,7 +50,17 @@ contract WaffleToken is Waffle, WaffleOwnership {
         payable(owner()).transfer(0.0001 ether);
     }
 
-    function id(){
+
+    function id(uint8[] memory loc, uint8 color) internal returns (uint256){
         // 아이디 정해지는 로직
+        uint256 res = loc[0] + loc[1]*10 + loc[3]*100 + loc[4]*1000 + color*10000;
+        return res;
     }
+
+    function _getRandom() returns(uint8){
+        uint randNonce = 0;
+        uint8 random = uint8(uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randNonce))) % 6)+1;
+        return random;
+    }
+
 }
