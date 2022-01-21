@@ -15,7 +15,9 @@ contract WaffleToken is Waffle, WaffleOwnership {
         setBaseURI("");
 
         for (uint8 i = 0; i < 10; i++) {
-            string memory title = string("waffle NFT #" + i); // 해결해야 함
+        // @dev TODO 솔리디티에는 int2str과 string concat 함수를 직접 구현 해야함.. 
+            string memory itostr = _uint2str(i);
+            string memory title = string("waffle NFT #" + itostr); 
             _mintNewWaffle(title);
         }
     }
