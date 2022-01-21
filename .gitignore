@@ -105,3 +105,9 @@ dist
 
 # IntelliJ IDEA
 .idea
+
+# truffle
+
+build
+contracts/.placeholder
+test/.placeholder
