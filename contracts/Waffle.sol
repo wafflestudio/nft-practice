@@ -67,6 +67,10 @@ contract Waffle is Ownable {
         uint8[2] memory horizontals,
         uint8[2] memory verticals
     ) internal returns (bool) {
+        if(verticals[0] == 0 || verticals[0] > 5) return false;
+        if(verticals[1] == 0 || verticals[1] > 5) return false;
+        if(horizontals[0] == 0 || horizontals[0] > 5) return false;
+        if(horizontals[1] == 0 || horizontals[1] > 5) return false;
         if(verticals[0] >= verticals[1]) return false;
         if(horizontals[0] >= horizontals[1]) return false;
         uint8 vDistance = verticals[1] - verticals[0];
