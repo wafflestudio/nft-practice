@@ -35,9 +35,13 @@ contract WaffleToken is Waffle, WaffleOwnership {
     }
 
     // @notice bake a new waffle with your ETH
-    function claim(string calldata title) external payable {
+    function claim(
+        string memory name,
+        uint8[2] memory horizontals,
+        uint8[2] memory verticals
+    ) external payable {
         require(msg.value == 0.00001 ether, "you need 0.00001 ETH to purchase waffle");
-        _mintNewWaffle(title);
+        _mintNewWaffle(name, horizontals, verticals);
         payable(owner()).transfer(0.00001 ether);
     }
 }

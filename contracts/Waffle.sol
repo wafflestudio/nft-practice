@@ -85,8 +85,8 @@ contract Waffle is Ownable {
     }
 
     function _encodePair(
-        uint8 memory first,
-        uint8 memory second
+        uint8 first,
+        uint8 second
     ) internal returns (uint8) {
         require(first>=0 && first<3, 'line out of range');
         require(second>=1 && second<4, 'line out of range');
@@ -95,25 +95,25 @@ contract Waffle is Ownable {
         else return 5;
     }
 
-    function _decodeHor(uint8 memory tokenId) internal returns (uint8[2]) {
+    function _decodeHor(uint8 tokenId) internal returns (uint8[2] memory) {
         require(tokenId>=0 && tokenId<36, 'tokenId out of range');
         return _decodeLoc(tokenId / 6);
     }
 
-    function _decodeVer(uint8 memory tokenId) internal returns (uint8[2]) {
+    function _decodeVer(uint8 tokenId) internal returns (uint8[2] memory) {
         require(tokenId>=0 && tokenId<36, 'tokenId out of range');
         return _decodeLoc(tokenId % 6);
     }
 
-    function _decodeLoc(uint8 memory code) internal returns (uint8[2]) {
+    function _decodeLoc(uint8 code) internal returns (uint8[2] memory) {
         require(code>=0 && code<6, 'code out of range');
-        if(num <= 2) return [0, code - 1];
-        if(num < 5) return [1, code - 1];
+        if(code <= 2) return [0, code - 1];
+        if(code < 5) return [1, code - 1];
         else return [2,3];
     }
 
     function _getRandomFlavour(string memory name) internal returns (Flavor) {
-        uint8 randomNum = _getRandom(name) % 3;
+        uint8 randomNum = uint8(_getRandom(name) % 3);
         if(randomNum == 0) return Flavor.Plain;
         if(randomNum == 1) return Flavor.Chocolate;
         else return Flavor.Vanilla;
