@@ -16,8 +16,10 @@ contract WaffleToken is Waffle, WaffleOwnership {
         setBaseURI("");
 
         for (uint8 i = 0; i < 10; i++) {
-            string memory title = string(abi.encodePacked("waffle NFT #", Strings.toString(i)));
-            _mintNewWaffle(title);
+            string memory name = string(abi.encodePacked("waffle NFT #", Strings.toString(i)));
+            uint8[2] memory hor = _decodeHor(3*i);
+            uint8[2] memory ver = _decodeVer(3*i);
+            _mintNewWaffle(name, hor, ver);
         }
     }
 

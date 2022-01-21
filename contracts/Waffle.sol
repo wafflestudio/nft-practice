@@ -90,9 +90,26 @@ contract Waffle is Ownable {
     ) internal returns (uint8) {
         require(first>=0 && first<3, 'line out of range');
         require(second>=1 && second<4, 'line out of range');
-        if(first == 0) return second -1;
-        if(first == 1) return second +1;
+        if(first == 0) return second - 1;
+        else if(first == 1) return second + 1;
         else return 5;
+    }
+
+    function _decodeHor(uint8 memory tokenId) internal returns (uint8[2]) {
+        require(tokenId>=0 && tokenId<36, 'tokenId out of range');
+        return _decodeLoc(tokenId / 6);
+    }
+
+    function _decodeVer(uint8 memory tokenId) internal returns (uint8[2]) {
+        require(tokenId>=0 && tokenId<36, 'tokenId out of range');
+        return _decodeLoc(tokenId % 6);
+    }
+
+    function _decodeLoc(uint8 memory code) internal returns (uint8[2]) {
+        require(code>=0 && code<6, 'code out of range');
+        if(num <= 2) return [0, code - 1];
+        if(num < 5) return [1, code - 1];
+        else return [2,3];
     }
 
     function _getRandomFlavour(string memory name) internal returns (Flavor) {
