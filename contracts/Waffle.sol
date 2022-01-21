@@ -47,7 +47,7 @@ contract Waffle is Ownable {
         baseColor, size 결정 로직 (?)
         @dev TODO 새로운 와플 발행, 발행 세부 로직 고도화
     */
-    function _createWaffle(
+    function _createNewWaffle(
         string memory name,
         uint8[2] memory horizontals,
         uint8[2] memory verticals

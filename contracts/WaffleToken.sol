@@ -23,13 +23,12 @@ contract WaffleToken is Waffle, WaffleOwnership {
 
 
     // @dev 새로운 Waffle 토큰 발행
-    function _mintNewWaffle(string memory title) internal {
-        uint8 size;
-        uint8 baseColor;
-        uint8[2] memory verticals;
-        uint8[2] memory horizontals;
-        uint256 toppings;
-        uint tokenId = _createRandomWaffle(title);
+    function _mintNewWaffle(
+        string memory name,
+        uint8[2] memory horizontals,
+        uint8[2] memory verticals
+    ) internal {
+        uint tokenId = _createNewWaffle(name, horizontals, verticals);
         _safeMint(msg.sender, tokenId);
     }
 
