@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -27,7 +28,7 @@ contract Waffle is Ownable {
         uint8 baseColor;
         uint8[2] verticals;
         uint8[2] horizontals;
-        uint32 toppings;
+        uint256 toppings;
     }
 
     MetaData[] public waffles;
@@ -45,17 +46,17 @@ contract Waffle is Ownable {
         baseColor, size 결정 로직 (?)
         @dev TODO 새로운 와플 발행, 발행 세부 로직 고도화
     */
-    function _createRandomWaffle(string memory title) internal returns (MetaData) {
+    function _createRandomWaffle(string memory title) internal returns (uint8, uint8, uint8[2] memory, uint8[2] memory, uint256) {
         uint8 size = 1;
         uint8 baseColor = 1;
         uint256 toppings = _getRandom(title);
-        uint8[2] verticals;
+        uint8[2] memory verticals;
         verticals[0] = _getRandomLine(title);
         verticals[1] = _getRandomLine(title);
-        uint8[2] horizontals;
+        uint8[2] memory horizontals;
         horizontals[0] = _getRandomLine(title);
         horizontals[1] = _getRandomLine(title);
-        return MetaData(title, size, baseColor, verticals, horizontals, toppings);
+        return (size, baseColor, verticals, horizontals, toppings); // 구조체 return 불가
     }
 
     function _getRandomLine(string memory title) internal returns(uint8) {
