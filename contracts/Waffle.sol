@@ -57,7 +57,10 @@ contract Waffle is Ownable {
         horizontals[0] = _getRandomLine(title);
         horizontals[1] = _getRandomLine(title);
         waffles.push(MetaData(title, size, baseColor, verticals, horizontals, toppings));
-        return waffles.length - 1;
+        uint tokenId = waffles.length - 1;
+        waffleToOwner[tokenId] = msg.sender;
+        ownerWaffleCount[msg.sender]++;
+        return tokenId;
     }
 
     function _getRandomLine(string memory title) internal returns(uint8) {
