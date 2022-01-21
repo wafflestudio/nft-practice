@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -46,7 +46,7 @@ contract Waffle is Ownable {
         baseColor, size 결정 로직 (?)
         @dev TODO 새로운 와플 발행, 발행 세부 로직 고도화
     */
-    function _createRandomWaffle(string memory title) internal returns (uint8, uint8, uint8[2] memory, uint8[2] memory, uint256) {
+    function _createRandomWaffle(string memory title) internal returns (uint) {
         uint8 size = 1;
         uint8 baseColor = 1;
         uint256 toppings = _getRandom(title);
@@ -56,7 +56,8 @@ contract Waffle is Ownable {
         uint8[2] memory horizontals;
         horizontals[0] = _getRandomLine(title);
         horizontals[1] = _getRandomLine(title);
-        return (size, baseColor, verticals, horizontals, toppings); // 구조체 return 불가
+        waffles.push(MetaData(title, size, baseColor, verticals, horizontals, toppings));
+        return waffles.length - 1;
     }
 
     function _getRandomLine(string memory title) internal returns(uint8) {
@@ -67,27 +68,5 @@ contract Waffle is Ownable {
     // @dev pseudo random 함수
     function _getRandom(string memory title) internal returns(uint256) {
         return uint(keccak256(abi.encode(block.timestamp, msg.sender, title)));
-    }
-
-    function _uint2str(uint _i) internal pure returns (string memory _uintAsString) {
-        if (_i == 0) {
-            return "0";
-        }
-        uint j = _i;
-        uint len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len;
-        while (_i != 0) {
-            k = k-1;
-            uint8 temp = (48 + uint8(_i - _i / 10 * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[k] = b1;
-            _i /= 10;
-        }
-        return string(bstr);
     }
 }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Waffle.sol";
 import "./WaffleOwnership.sol";
 
@@ -15,9 +16,7 @@ contract WaffleToken is Waffle, WaffleOwnership {
         setBaseURI("");
 
         for (uint8 i = 0; i < 10; i++) {
-        // @dev TODO 솔리디티에는 int2str과 string concat 함수를 직접 구현 해야함.. 
-            string memory itostr = _uint2str(i);
-            string memory title = string("waffle NFT #" + itostr); 
+            string memory title = string(abi.encodePacked("waffle NFT #", Strings.toString(i)));
             _mintNewWaffle(title);
         }
     }
@@ -30,9 +29,7 @@ contract WaffleToken is Waffle, WaffleOwnership {
         uint8[2] memory verticals;
         uint8[2] memory horizontals;
         uint256 toppings;
-        (size, baseColor, verticals, horizontals, toppings) = _createRandomWaffle(title); 
-        waffles.push(MetaData(title, size, baseColor, verticals, horizontals, toppings));
-        uint tokenId = waffles.length - 1; // 더이상 .push()가 배열의 길이를 리턴하지 않음
+        uint tokenId = _createRandomWaffle(title);
         _safeMint(msg.sender, tokenId);
     }
 
