@@ -111,9 +111,9 @@ contract Waffle is Ownable {
 
     function _decodeLoc(uint8 code) internal returns (uint8[2] memory) {
         require(code>=0 && code<6, 'code out of range');
-        if(code <= 2) return [0, code + 1];
-        if(code < 5) return [1, code - 1];
-        else return [2,3];
+        if(code <= 2) return [1, code + 3];
+        if(code < 5) return [2, code + 1];
+        else return [3,5];
     }
 
     function _getRandomFlavour(string memory name) internal returns (Flavor) {
