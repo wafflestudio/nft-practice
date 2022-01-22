@@ -30,18 +30,9 @@ contract Waffle is Ownable {
         uint8[2] verticals;
     }
 
-    MetaData[] public waffles;
+    mapping(uint256 => MetaData) public idToWaffle;
     mapping(uint256 => address) public waffleToOwner;
     mapping(address => uint256) ownerWaffleCount;
-
-    // @dev TODO 와플 프로퍼티를 표현해줄 수 있는 애플리케이션 연동
-    string private _currentBaseURI;
-
-    function setBaseURI(string memory baseURI) public onlyOwner {
-        _currentBaseURI = baseURI;
-    }
-
-
 
     /**
         baseColor, size 결정 로직 (?)
@@ -55,9 +46,9 @@ contract Waffle is Ownable {
         require(_validateShape(horizontals, verticals), 'this shape is not a waffle at all!');
 
         Flavor flavor = _getRandomFlavour(name);
-        waffles.push(MetaData(name, flavor, horizontals, verticals));
-
         uint tokenId = _encodeShape(horizontals, verticals);
+
+        idToWaffle[tokenId] = MetaData(name, flavor, horizontals, verticals);
         waffleToOwner[tokenId] = msg.sender;
         ownerWaffleCount[msg.sender]++;
         return tokenId;
@@ -66,7 +57,7 @@ contract Waffle is Ownable {
     function _validateShape(
         uint8[2] memory horizontals,
         uint8[2] memory verticals
-    ) internal returns (bool) {
+    ) internal pure returns (bool) {
         if(verticals[0] == 0 || verticals[0] > 5) return false;
         if(verticals[1] == 0 || verticals[1] > 5) return false;
         if(horizontals[0] == 0 || horizontals[0] > 5) return false;
@@ -82,7 +73,7 @@ contract Waffle is Ownable {
     function _encodeShape(
         uint8[2] memory horizontals,
         uint8[2] memory verticals
-    ) internal returns (uint8) {
+    ) internal pure returns (uint8) {
         uint8 hor = _encodePair(horizontals[0] - 1, horizontals[1] - 2);
         uint8 ver = _encodePair(verticals[0] - 1, verticals[1] - 2);
         return hor*6 + ver; //return int of range 0 to 35
@@ -91,7 +82,7 @@ contract Waffle is Ownable {
     function _encodePair(
         uint8 first,
         uint8 second
-    ) internal returns (uint8) {
+    ) internal pure returns (uint8) {
         require(first>=0 && first<3, 'line out of range');
         require(second>=1 && second<4, 'line out of range');
         if(first == 0) return second - 1;
@@ -99,24 +90,24 @@ contract Waffle is Ownable {
         else return 5;
     }
 
-    function _decodeHor(uint8 tokenId) internal returns (uint8[2] memory) {
+    function _decodeHor(uint8 tokenId) internal pure returns (uint8[2] memory) {
         require(tokenId>=0 && tokenId<36, 'tokenId out of range');
         return _decodeLoc(tokenId / 6);
     }
 
-    function _decodeVer(uint8 tokenId) internal returns (uint8[2] memory) {
+    function _decodeVer(uint8 tokenId) internal pure returns (uint8[2] memory) {
         require(tokenId>=0 && tokenId<36, 'tokenId out of range');
         return _decodeLoc(tokenId % 6);
     }
 
-    function _decodeLoc(uint8 code) internal returns (uint8[2] memory) {
+    function _decodeLoc(uint8 code) internal pure returns (uint8[2] memory) {
         require(code>=0 && code<6, 'code out of range');
         if(code <= 2) return [1, code + 3];
         if(code < 5) return [2, code + 1];
         else return [3,5];
     }
 
-    function _getRandomFlavour(string memory name) internal returns (Flavor) {
+    function _getRandomFlavour(string memory name) internal view returns (Flavor) {
         uint8 randomNum = uint8(_getRandom(name) % 3);
         if(randomNum == 0) return Flavor.Plain;
         if(randomNum == 1) return Flavor.Chocolate;
@@ -124,7 +115,15 @@ contract Waffle is Ownable {
     }
 
     // @dev pseudo random 함수
-    function _getRandom(string memory name) internal returns(uint256) {
+    function _getRandom(string memory name) internal view returns(uint256) {
         return uint(keccak256(abi.encode(block.timestamp, msg.sender, name)));
+    }
+
+    function showHorizontals(uint8 tokenId) public view returns(uint8[2] memory) {
+        return idToWaffle[tokenId].horizontals;
+    }
+
+    function showVerticals(uint8 tokenId) public view returns(uint8[2] memory) {
+        return idToWaffle[tokenId].verticals;
     }
 }
