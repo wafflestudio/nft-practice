@@ -8,6 +8,15 @@ import "./Waffle.sol";
 // @dev 와플 컨트랙트의 ERC721 구현체
 abstract contract WaffleOwnership is Waffle, ERC721 {
 
+    event UriChanged(string baseURI);
+
+    // @dev TODO D_app
+    string private _currentBaseURI;
+    function setBaseURI(string memory baseURI) public onlyOwner {
+        _currentBaseURI = baseURI;
+        emit UriChanged(_currentBaseURI);
+    }
+
     modifier onlyOwnerOf(uint _waffleId) {
         require(msg.sender == waffleToOwner[_waffleId]);
         _;
@@ -44,5 +53,9 @@ abstract contract WaffleOwnership is Waffle, ERC721 {
         ownerWaffleCount[_from]--;
         waffleToOwner[_tokenId] = _to;
         emit Transfer(_from, _to, _tokenId);
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return _currentBaseURI;
     }
 }
