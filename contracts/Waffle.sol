@@ -52,7 +52,7 @@ contract Waffle is Ownable {
         uint8[2] memory horizontals,
         uint8[2] memory verticals
     ) internal returns (uint) {
-        require(!_validateShape(horizontals, verticals), 'this shape is not a waffle at all!');
+        require(_validateShape(horizontals, verticals), 'this shape is not a waffle at all!');
 
         Flavor flavor = _getRandomFlavour(name);
         waffles.push(MetaData(name, flavor, horizontals, verticals));

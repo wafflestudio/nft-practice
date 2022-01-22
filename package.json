@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.2",
+    "@truffle/hdwallet-provider": "^2.0.1",
     "ganache-cli": "^6.1.8",
-    "openzeppelin-solidity": "^4.4.2"
+    "openzeppelin-solidity": "^4.4.2",
+    "truffle-flatten": "^1.0.8"
   },
   "name": "NFT",
   "description": "와플스튜디오 NFT 프로젝트",
@@ -24,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/wafflestudio/NFT/issues"
   },
-  "homepage": "https://github.com/wafflestudio/NFT#readme"
+  "homepage": "https://github.com/wafflestudio/NFT#readme",
+  "devDependencies": {
+    "hardhat": "^2.8.3",
+    "truffle-plugin-verify": "^0.5.21"
+  }
 }
